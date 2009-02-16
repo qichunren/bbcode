@@ -8,9 +8,19 @@ module  BBcode
     :bold      => [/\[b\](.+?)\[\/b\]/mi,'<strong>\1</strong>' ],
     :underline => [/\[u\](.+?)\[\/u\]/mi,'<u>\1</u>' ],
 
-    :url       => [/\[url=(.+?)\](.+?)\[\/url\]/mi,'<a href="\1">\2</a>' ],
+    :url_src   => [/\[url=(.+?)\](.+?)\[\/url\]/mi,'<a href="\1">\2</a>' ],
     :url       => [/\[url\](.+?)\[\/url\]/mi,'<a href="\1">\1</a>' ],
-    :image     => [/\[img\](.+?)\[\/img\]/mi,'<img src="\1" />' ],
+    :image     => [/\[img\](.+?)\[\/img\]/mi,'<img src="\1"/>' ],
+
+    :size      => [/\[size=['"]?(.*?)['"]?\](.*?)\[\/size\]/im,'<span style="font-size: \1px;">\2</span>'],
+
+    :ul      => [/\[list\](.+)\[\/list\]/mi,'<ul>\1</ul>'],
+    :ul_num  => [/\[list([:=]\d+)?\](.+)\[\/list\]/mi,'<ul style="list-style-type: decimal;">\2</ul>'],
+    :ul_roman => [/\[list([:=]r)?\](.+)\[\/list\]/mi,'<ul style="list-style-type: lower-roman;">\2</ul>'],
+    :ul_latin => [/\[list([:=]\w+)?\](.+)\[\/list\]/mi,'<ul style="list-style-type: lower-latin;">\2</ul>'],
+    :list    => [/\[\*\]([^(\[|\<)]+)/mi,'<li>\1</li>'],
+    :quote   => [/\[quote\](.*?)\[\/quote\]/mi,'<blockquote>\1</blockquote>'],
+    :email   => [/\[email\](.+)\[\/email\]/mi,'<a href="mailto:\1">\1</a>'],
   }
 
   class << self
