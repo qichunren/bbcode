@@ -11,6 +11,9 @@ module  BBcode
     :url_src   => [/\[url=(.+?)\](.+?)\[\/url\]/mi,'<a href="\1">\2</a>' ],
     :url       => [/\[url\](.+?)\[\/url\]/mi,'<a href="\1">\1</a>' ],
     :image     => [/\[img\](.+?)\[\/img\]/mi,'<img src="\1"/>' ],
+    :dl        => [/\[dl\](.+?)\[\/dl\]/mi,'<dl>\1</dl>' ],
+    :dt        => [/\[dt\](.+?)\[\/dt\]/mi,'<dt>\1</dt>' ],
+    :dd        => [/\[dd\](.+?)\[\/dd\]/mi,'<dd>\1</dd>' ],
 
     :size      => [/\[size=['"]?(.*?)['"]?\](.*?)\[\/size\]/im,'<span style="font-size: \1px;">\2</span>'],
 
@@ -25,9 +28,22 @@ module  BBcode
 
   class << self
     def to_html(text)
-      text = text.gsub(/</, '&lt;' ).gsub(/>/, '&gt;' )
+      text = text.clone.gsub(/</, '&lt;' ).gsub(/>/, '&gt;' )
       Tags.map { |k,v| text.gsub!(v[0],v[1])}
-      return text.gsub(/\r\n?/, "\n" ).gsub( /\n/, "<br />" )
+      text = text.gsub(/\r\n?/, "\n" ).gsub( /\n/, "<br/>" )
+
+      text.scan(/(<code(?:=)?([a-z+\s]*)>(.*?)(<\/code>))/im).each do |match|
+        source = match[2]
+        lexer = match[1].empty? ? "text" : match[1]
+        text.gsub!(match[0],"<div class='code_type'>#{lexer}</div>" + code2html(source,lexer))
+      end
+      return text
+    end
+
+    def code2html(source,lexer = :text,format = :html)
+      require 'rubygems'
+      require 'coderay'
+      return CodeRay.highlight(source,lexer).sub(/(CodeRay)/,"highlight")
     end
   end
 end
