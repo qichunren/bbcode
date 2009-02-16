@@ -21,6 +21,7 @@ class BBcode
     :ul_num  => [/\[list([:=]\d+)?\](.+)\[\/list\]/mi,'<ul style="list-style-type: decimal;">\2</ul>'],
     :ul_roman => [/\[list([:=]r)?\](.+)\[\/list\]/mi,'<ul style="list-style-type: lower-roman;">\2</ul>'],
     :ul_latin => [/\[list([:=]\w+)?\](.+)\[\/list\]/mi,'<ul style="list-style-type: lower-latin;">\2</ul>'],
+
     :list    => [/\[\*\]([^(\[|\<)]+)/mi,'<li>\1</li>'],
     :quote   => [/\[quote\](.*?)\[\/quote\]/mi,'<blockquote>\1</blockquote>'],
     :email   => [/\[email\](.+)\[\/email\]/mi,'<a href="mailto:\1">\1</a>'],
@@ -32,10 +33,10 @@ class BBcode
       Tags.map { |k,v| text.gsub!(v[0],v[1])}
       text = text.gsub(/\r\n?/, "\n" ).gsub( /\n/, "<br/>" )
 
-      text.scan(/(<code(?:=)?([a-z+\s]*)>(.*?)(<\/code>))/im).each do |match|
-        source = match[2]
-        lexer = match[1].empty? ? "text" : match[1]
-        text.gsub!(match[0],"<div class='code_type'>#{lexer}</div>" + code2html(source,lexer))
+      text.scan(/(<code(?:=)?([a-z+\s]*)>(.*?)(<\/code>))/im).each do |m|
+        source = m[2]
+        lexer = m[1].empty? ? "text" : m[1]
+        text.gsub!(m[0],"<div class='code_type'>#{lexer}</div>" + code2html(source,lexer))
       end
       return text
     end
