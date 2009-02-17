@@ -1,6 +1,5 @@
 class BBcode
   Tags = {
-    :code      => [/\[code[:=\s]?(.*?)\](.+?)\[\/code\]/mi,'<code=\1>\2</code>'],
     :insert    => [/\[ins\](.*?)\[\/ins\]/mi,'<ins>\1</ins>'],
     :italic    => [/\[i\](.*?)\[\/i\]/mi,'<em>\1</em>'],
     :delete    => [/\[del\](.*?)\[\/del\]/mi,'<del>\1</del>'],
@@ -29,16 +28,14 @@ class BBcode
 
   class << self
     def to_html(text)
-      text = text.clone.gsub(/</, '&lt;' ).gsub(/>/, '&gt;' )
-      Tags.map { |k,v| text.gsub!(v[0],v[1])}
-      text = text.gsub(/\r\n?/, "\n" ).gsub( /\n/, "<br/>" )
+      text = text.clone.gsub(/</, '&lt;' ).gsub(/>/, '&gt;' ).gsub(/ /, "&nbsp;" )
 
-      text.scan(/(<code(?:=)?([a-z+\s]*)>(.*?)(<\/code>))/im).each do |m|
-        source = m[2]
-        lexer = m[1].empty? ? "text" : m[1]
-        text.gsub!(m[0],"<div class='code_type'>#{lexer}</div>" + code2html(source,lexer))
+      text.scan(/(\[code[:=\s]?(.*?)\](.+?)\[\/code\])/mi).each do |m|
+        text.gsub!(m[0],"<div class='code_type'>#{m[1]}</div>" + code2html(m[2].gsub(/&nbsp;/,' '),m[1]))
       end
-      return text
+
+      Tags.map { |k,v| text.gsub!(v[0],v[1])}
+      return text.gsub( /\n/, "<br/>" )
     end
 
     def code2html(source,lexer = :text,format = :html)
