@@ -31,7 +31,7 @@ class BBcode
       text = text.clone.gsub(/</, '&lt;' ).gsub(/>/, '&gt;' ).gsub(/ /, "&nbsp;" )
 
       text.scan(/(\[code[:=\s]?(.*?)\](.+?)\[\/code\])/mi).each do |m|
-        text.gsub!(m[0],"<div class='code_type'>#{m[1]}</div>" + code2html(m[2].gsub(/&nbsp;/,' '),m[1]))
+        text.gsub!(m[0],"<div class='code_type'>#{m[1]}</div>" + code2html(m[2].gsub(/&nbsp;/,' ').gsub(/&lt;/,'<').gsub(/&gt;/,'>'),m[1]))
       end
 
       Tags.map { |k,v| text.gsub!(v[0],v[1])}
