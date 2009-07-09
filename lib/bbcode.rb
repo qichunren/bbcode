@@ -35,6 +35,9 @@ class BBcode
       end
 
       Tags.map { |k,v| text.gsub!(v[0],v[1])}
+
+      text.gsub!(/[^"]((https?:\/\/|www\.)(\w+\.)*\w+(\/\S*)?)/,'<a href="\1">\1</a>')
+      #FIXME only work after some char
       return text.gsub( /\n/, "<br/>" )
     end
 

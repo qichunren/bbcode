@@ -13,6 +13,7 @@ class TestBBCode < Test::Unit::TestCase
       '[img]www.zhangjinzh.com/welcome.jpg[/img]' => '<img src="www.zhangjinzh.com/welcome.jpg"/>',
       '[quote]zhangjinzhu[/quote]'  => '<blockquote>zhangjinzhu</blockquote>',
       '[email]wosmvp@gmail.com[/email]' => '<a href="mailto:wosmvp@gmail.com">wosmvp@gmail.com</a>',
+      ' http://124.mv.com/d' => '&nbsp<a href="http://124.mv.com/d">http://124.mv.com/d</a>',
     }
     tags.map { |k,v| assert_equal k.bbcode_to_html,v }
 
